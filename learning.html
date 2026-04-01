@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Learning Path</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <div class="content">
+
+        <h1>🚀 Personalized Learning Recommendations</h1>
+        <p>Generated from your skill gap analysis</p>
+
+        <div class="learning-grid">
+
+            <!-- CARD 1 -->
+            <div class="learn-card" onclick="openLink('https://www.coursera.org/search?query=csharp')">
+                <h2>C#</h2>
+                <span class="tag-label">LANGUAGES</span>
+                <p>Master syntax, data structures, and algorithmic problem solving.</p>
+                <button>Learn on Coursera →</button>
+            </div>
+
+            <!-- CARD 2 -->
+            <div class="learn-card" onclick="openLink('https://www.coursera.org/search?query=agile')">
+                <h2>Agile</h2>
+                <span class="tag-label">TOOLS</span>
+                <p>Integrate this into your daily workflow.</p>
+                <button>Learn on Coursera →</button>
+            </div>
+
+            <!-- CARD 3 -->
+            <div class="learn-card" onclick="openLink('https://www.coursera.org/search?query=communication+skills')">
+                <h2>Communication</h2>
+                <span class="tag-label">SOFT SKILLS</span>
+                <p>Improve teamwork, leadership, and presentation.</p>
+                <button>Learn on Coursera →</button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        function openLink(url) {
+            window.open(url, "_blank"); // opens in new tab
+        }
+    </script>
+    <script>
+        let data = JSON.parse(localStorage.getItem("result")) || { resume_skills: [], job_skills: [] };
+
+        let missing = data.job_skills.filter(s => !data.resume_skills.includes(s));
+
+        let grid = document.getElementById("learningGrid");
+
+        missing.forEach(skill => {
+            let link = `https://www.google.com/search?q=learn+${skill}`;
+
+            grid.innerHTML += `
+        <div class="learn-card" onclick="openLink('${link}')">
+            <h2>${skill}</h2>
+            <span class="tag-label">RECOMMENDED</span>
+            <p>Learn ${skill} to improve your job match.</p>
+            <button>Start Learning →</button>
+        </div>
+    `;
+        });
+
+        function openLink(url) {
+            window.open(url, "_blank");
+        }
+    </script>
+
+</body>
+
+</html>

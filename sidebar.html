@@ -1,0 +1,28 @@
+<body>
+
+    <div id="sidebar-container"></div>
+
+    <div class="content">
+        <!-- ALL your existing content goes here -->
+    </div>
+
+    <script>
+        fetch("sidebar.html")
+            .then(res => res.text())
+            .then(data => {
+                document.getElementById("sidebar-container").innerHTML = data;
+            });
+    </script>
+
+</body>
+<div class="sidebar">
+
+    <h2 class="logo">⚡ SkillGap AI</h2>
+
+    <a href="dashboard.html" class="nav-item">🏠 Home</a>
+    <a href="parsing.html" class="nav-item">📄 Parsing</a>
+    <a href="skills.html" class="nav-item">🧠 Skills</a>
+    <a href="result.html" class="nav-item">📊 Results</a>
+    <a href="learning.html" class="nav-item">🎯 Learning Path</a>
+
+</div>

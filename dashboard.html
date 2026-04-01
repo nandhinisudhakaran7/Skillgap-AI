@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <body>
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <h2 class="logo">⚡ SkillGap AI</h2>
+
+            <a href="dashboard.html" class="nav-item">🏠 Home</a>
+            <a href="parsing.html" class="nav-item">📄 Parsing</a>
+            <a href="skills.html" class="nav-item">🧠 Skills</a>
+            <a href="result.html" class="nav-item">📊 Results</a>
+            <a href="learning.html" class="nav-item">🎯 Learning Path</a>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content">
+
+            <div class="card">
+
+                <div class="upload-grid">
+
+                    <!-- RESUME -->
+                    <div class="upload-box">
+                        <h3>📄 Your Resume</h3>
+                        <p>PDF or TXT file</p>
+
+                        <input type="file" id="resume" accept=".pdf,.doc,.docx,.txt">
+
+                        <p style="margin-top:20px;">Drag & Drop your resume here</p>
+                    </div>
+
+                    <!-- JOB DESCRIPTION -->
+                    <div class="upload-box">
+                        <h3>📋 Job Description</h3>
+
+                        <textarea id="jobText" placeholder="Paste job description..."></textarea>
+
+                        <input type="file" id="jobFile" accept=".pdf,.doc,.docx,.txt">
+                    </div>
+
+                </div>
+
+                <button class="main-btn" onclick="analyze()">⚡ Analyze Skill Gap</button>
+
+            </div>
+
+        </div>
+
+        <!-- ACTIVE LINK SCRIPT -->
+        <script>
+            let links = document.querySelectorAll(".nav-item");
+
+            links.forEach(link => {
+                if (window.location.href.includes(link.getAttribute("href"))) {
+                    link.classList.add("active");
+                }
+            });
+        </script>
+
+    </body>
+
+    </div>
+
+    <script>
+
+        async function analyze() {
+
+            let resume = document.getElementById("resume").files[0];
+            let jobFile = document.getElementById("jobFile").files[0];
+            let jobText = document.getElementById("jobText").value;
+
+            let formData = new FormData();
+
+            formData.append("resume", resume);
+
+            // If text entered → send text
+            if (jobText) {
+                formData.append("job_text", jobText);
+            } else {
+                formData.append("job", jobFile);
+            }
+
+            let res = await fetch("http://127.0.0.1:5000/upload", {
+                method: "POST",
+                body: formData
+            });
+
+            let data = await res.json();
+
+            localStorage.setItem("result", JSON.stringify(data));
+
+            window.location.href = "parsing.html";
+
+        }
+
+    </script>
+
+</body>
+
+</html>

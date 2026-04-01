@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Parsing</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h2 class="logo">⚡ SkillGap AI</h2>
+
+        <a href="dashboard.html" class="nav-item">🏠 Home</a>
+        <a href="parsing.html" class="nav-item active">📄 Parsing</a>
+        <a href="skills.html" class="nav-item">🧠 Skills</a>
+        <a href="result.html" class="nav-item">📊 Results</a>
+        <a href="learning.html" class="nav-item">🎯 Learning Path</a>
+
+    </div>
+
+    <div class="content">
+
+        <h2>Parsed Text</h2>
+
+        <div class="card">
+            <h3>Resume</h3>
+            <p id="resume"></p>
+        </div>
+
+        <div class="card">
+            <h3>Job Description</h3>
+            <p id="job"></p>
+        </div>
+
+        <button onclick="next()">Next</button>
+
+    </div>
+    <div class="content">
+
+        <h1>📄 Upload Resume & Job Description</h1>
+
+        <form id="uploadForm">
+
+            <label>Upload Resume</label>
+            <input type="file" id="resume" required>
+
+            <br><br>
+
+            <label>Upload Job Description</label>
+            <input type="file" id="job" required>
+
+            <br><br>
+
+            <button type="submit">⚡ Analyze Skill Gap</button>
+
+        </form>
+
+    </div>
+
+    <script>
+        let data = JSON.parse(localStorage.getItem("result"));
+
+        document.getElementById("resume").innerText = data.resume_text;
+        document.getElementById("job").innerText = data.job_text;
+
+        function next() {
+            window.location.href = "skills.html";
+        }
+    </script>
+    <script>
+        let links = document.querySelectorAll(".nav-item");
+
+        links.forEach(link => {
+            if (window.location.href.includes(link.getAttribute("href"))) {
+                link.classList.add("active");
+            }
+        });
+    </script>
+    <script src="app.js"></script>
+</body>
+
+</html>

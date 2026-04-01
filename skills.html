@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Skills Analysis</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* Layout */
+        .section {
+            margin-top: 20px;
+        }
+
+        /* Cards */
+        .skill-cards {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            /* ✅ FIX */
+        }
+
+        .skill-card {
+            min-width: 200px;
+            /* ✅ prevents shrinking */
+        }
+
+
+        .skill-card {
+            flex: 1;
+            padding: 20px;
+            border-radius: 15px;
+            background: #1e293b;
+            color: white;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+            transition: 0.3s;
+        }
+
+        .skill-card:hover {
+            transform: scale(1.05);
+        }
+
+        /* Colors */
+        .tech {
+            border-left: 5px solid #3b82f6;
+        }
+
+        .soft {
+            border-left: 5px solid #ec4899;
+        }
+
+        .total {
+            border-left: 5px solid #22c55e;
+        }
+
+        .conf {
+            border-left: 5px solid #f59e0b;
+        }
+
+        /* Tags */
+        .tag {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 5px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .resume {
+            background: #3b82f6;
+        }
+
+        .job {
+            background: #22c55e;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h2 class="logo">⚡ SkillGap AI</h2>
+
+        <a href="dashboard.html" class="nav-item">🏠 Home</a>
+        <a href="parsing.html" class="nav-item">📄 Parsing</a>
+        <a href="skills.html" class="nav-item active">🧠 Skills</a>
+        <a href="result.html" class="nav-item">📊 Results</a>
+        <a href="learning.html" class="nav-item">🎯 Learning Path</a>
+    </div>
+    <!-- CONTENT -->
+    <div class="content">
+
+        <h2>🧠 Skills Analysis</h2>
+
+        <!-- 🔥 CARDS -->
+        <div class="skill-cards">
+
+            <div class="skill-card tech">
+                <h3>⚙️ Technical Skills</h3>
+                <p id="techCount"></p>
+            </div>
+
+            <div class="skill-card soft">
+                <h3>🤝 Soft Skills</h3>
+                <p id="softCount"></p>
+            </div>
+
+            <div class="skill-card total">
+                <h3>📊 Total Skills</h3>
+                <p id="totalCount"></p>
+            </div>
+
+            <div class="skill-card conf">
+                <h3>🎯 Confidence</h3>
+                <p id="confidence"></p>
+            </div>
+
+        </div>
+
+        <!-- 🔥 DONUT CHART -->
+        <div class="card section">
+            <h3>📊 Skill Match</h3>
+            <canvas id="chart" width="300"></canvas>
+        </div>
+
+        <!-- 🔥 RESUME SKILLS -->
+        <div class="card section">
+            <h3>📄 Resume Skills</h3>
+            <div id="resumeSkills"></div>
+        </div>
+
+        <!-- 🔥 JOB SKILLS -->
+        <div class="card section">
+            <h3>📋 Job Description Skills</h3>
+            <div id="jobSkills"></div>
+        </div>
+
+        <button onclick="next()">Next → Results</button>
+
+    </div>
+
+    <script>
+
+        // 🔥 LOAD DATA
+        let data = JSON.parse(localStorage.getItem("result")) || {};
+
+        let resume = Array.isArray(data.resume_skills) ? data.resume_skills : [];
+        let job = Array.isArray(data.job_skills) ? data.job_skills : [];
+        // 🔥 CLEAN + UNIQUE
+        resume = [...new Set(resume.map(s => s.toLowerCase()))];
+        job = [...new Set(job.map(s => s.toLowerCase()))];
+
+        // 🔥 DEFINE SKILLS
+        let techList = ["python", "java", "c++", "sql", "html", "css", "javascript", "ai", "ml", "aws", "docker"];
+        let softList = ["communication", "teamwork", "leadership", "problem solving", "adaptability"];
+
+        // 🔥 SPLIT
+        let tech = job.filter(s => techList.includes(s));
+        let soft = job.filter(s => softList.includes(s));
+
+        // 🔥 MATCH LOGIC
+        let match = job.filter(skill => resume.includes(skill));
+        let score = Math.round((match.length / job.length) * 100 || 0);
+
+        // 🔥 COUNTS
+        document.getElementById("techCount").innerText = tech.length;
+        document.getElementById("softCount").innerText = soft.length;
+        document.getElementById("totalCount").innerText = job.length;
+        document.getElementById("confidence").innerText = score + "%";
+
+        // 🔥 DISPLAY SKILLS
+        let rBox = document.getElementById("resumeSkills");
+        let jBox = document.getElementById("jobSkills");
+
+        rBox.innerHTML = "";
+        jBox.innerHTML = "";
+
+        resume.forEach(s => {
+            rBox.innerHTML += `<span class="tag resume">${s}</span>`;
+        });
+
+        job.forEach(s => {
+            jBox.innerHTML += `<span class="tag job">${s}</span>`;
+        });
+
+
+        job.forEach(s => {
+            jBox.innerHTML += `<span class="tag job">${s}</span>`;
+        });
+
+        // 🔥 DONUT CHART
+        new Chart(document.getElementById("chart"), {
+            type: "doughnut",
+            data: {
+                labels: ["Matched", "Missing"],
+                datasets: [{
+                    data: [score, 100 - score],
+                    backgroundColor: ["#22c55e", "#ef4444"],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        labels: { color: "white" }
+                    }
+                }
+            }
+        });
+
+        // 🔥 NEXT
+        function next() {
+            window.location.href = "result.html";
+        }
+
+    </script>
+
+</body>
+
+</html>
